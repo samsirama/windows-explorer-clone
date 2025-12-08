@@ -1,0 +1,44 @@
+:root {
+  --bg-color: #202020;
+  --surface-color: #2c2c2c;
+  --surface-hover: #3a3a3a;
+  --text-color: #ffffff;
+  --text-muted: #a0a0a0;
+  --accent-color: #60cdff;
+  --border-color: #3e3e3e;
+  --header-height: 48px;
+  --sidebar-width: 260px;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI Variable", "Segoe UI", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow: hidden;
+  user-select: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 5px;
+  border: 2px solid var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
