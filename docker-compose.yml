@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./packages/server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgres://postgres:root@db:5432/explorer
+      - PORT=3000
+    depends_on:
+      - db
+    networks:
+      - explorer-network
+
+  client:
+    build:
+      context: ./packages/client
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3000
+    ports:
+      - "8080:80"
+    depends_on:
+      - server
+    networks:
+      - explorer-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: explorer
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - explorer-network
+
+networks:
+  explorer-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

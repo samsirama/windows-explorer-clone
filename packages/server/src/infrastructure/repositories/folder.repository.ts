@@ -34,4 +34,12 @@ export class FolderRepository {
       where: (node, { ilike }) => ilike(node.name, `%${query}%`),
     });
   }
+
+  async deleteNode(id: string) {
+    return await db.delete(nodes).where(eq(nodes.id, id)).returning();
+  }
+
+  async updateNode(id: string, data: Partial<typeof nodes.$inferInsert>) {
+    return await db.update(nodes).set(data).where(eq(nodes.id, id)).returning();
+  }
 }

@@ -11,4 +11,13 @@ export const foldersController = (service: FolderService) =>
     })
     .get("/:id", async ({ params: { id } }) => {
       return await service.getFolderContents(id);
+    })
+    .post("/", async ({ body }) => {
+      return await service.createNode(body);
+    })
+    .delete("/:id", async ({ params: { id } }) => {
+      return await service.deleteNode(id);
+    })
+    .patch("/:id", async ({ params: { id }, body }) => {
+      return await service.updateNode(id, body);
     });

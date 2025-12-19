@@ -3,8 +3,11 @@ import { onMounted, ref } from 'vue';
 import { useExplorer } from '../composables/useExplorer';
 import SidebarTree from './SidebarTree.vue';
 import FolderView from './FolderView.vue';
+import ExplorerHeader from './ExplorerHeader.vue';
+import ContextMenu from './ContextMenu.vue';
+import PropertiesModal from './PropertiesModal.vue';
 
-const { treeData, fetchTree, search } = useExplorer();
+const { treeData, fetchTree, openContextMenu } = useExplorer();
 const sidebarWidth = ref(250); // Default width
 const isResizing = ref(false);
 
@@ -41,23 +44,8 @@ onMounted(() => {
 
 <template>
   <div class="explorer-window">
-    <header class="explorer-header">
-      <div class="window-controls">
-        <!-- Mock controls -->
-        <span></span><span></span><span></span>
-      </div>
-      <div class="breadcrumb-bar">
-         <!-- Breadcrumb (Simplified) -->
-         <span>Home</span>
-      </div>
-      <div class="search-bar">
-        <input 
-            type="text" 
-            placeholder="Search" 
-            @keyup.enter="(e) => search((e.target as HTMLInputElement).value)"
-        />
-      </div>
-    </header>
+    <ExplorerHeader />
+    
     <div class="explorer-body">
       <aside class="sidebar" :style="{ width: sidebarWidth + 'px' }">
         <nav>
@@ -69,10 +57,16 @@ onMounted(() => {
       <!-- Resizer Handle -->
       <div class="resizer" @mousedown="startResize"></div>
 
-      <main class="content-area">
+      <main class="content-area" @contextmenu.prevent="openContextMenu($event, null)">
         <FolderView />
       </main>
     </div>
+
+    <!-- Global Context Menu -->
+    <ContextMenu />
+    
+    <!-- Properties Modal -->
+    <PropertiesModal />
   </div>
 </template>
 
@@ -84,23 +78,7 @@ onMounted(() => {
   background: var(--bg-color);
 }
 
-.explorer-header {
-  height: var(--header-height);
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  background: var(--surface-color);
-  border-bottom: 1px solid var(--border-color);
-  gap: 16px;
-}
 
-.search-bar input {
-  background: #3c3c3c;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
-  color: white;
-}
 
 .explorer-body {
   display: flex;

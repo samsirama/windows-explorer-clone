@@ -8,14 +8,19 @@ import { FolderRepository } from "./infrastructure/repositories/folder.repositor
 const folderRepository = new FolderRepository();
 const folderService = new FolderService(folderRepository);
 
-const app = new Elysia()
+// Export app for serverless usage
+export const app = new Elysia()
   .use(cors())
   .use(swagger())
-  .use(foldersController(folderService))
-  .listen(3000);
+  .use(foldersController(folderService));
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+// Only listen if run directly (not imported)
+// @ts-ignore
+if (import.meta.main) {
+  app.listen(process.env.PORT || 3000);
+  console.log(
+    `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+  );
+}
 
 export type App = typeof app;

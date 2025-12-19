@@ -1,7 +1,26 @@
 <script setup lang="ts">
 import { useExplorer } from '../composables/useExplorer';
 
-const { currentFiles, selectFolder, selectItem, openItem, selectedItem } = useExplorer();
+const { 
+    currentFiles, 
+    selectItem, 
+    selectedItem, 
+    openItem, 
+    openContextMenu,
+    renamingId,
+    renamingValue,
+    commitRename
+} = useExplorer();
+
+// Custom directive for autofocus
+const vFocus = {
+  mounted: (el: HTMLElement) => {
+      el.focus();
+      if (el instanceof HTMLInputElement) {
+          el.select();
+      }
+  }
+}
 
 const formatDate = (date: string) => {
     if (!date) return '';
@@ -40,11 +59,21 @@ const handleRowDblClick = (node: any) => {
         :class="{ 'selected': selectedItem?.id === node.id }"
         @click="handleRowClick(node)"
         @dblclick="handleRowDblClick(node)"
+        @contextmenu.prevent.stop="openContextMenu($event, node)"
       >
-         <div class="col-name">
+          <div class="col-name">
             <span class="icon">{{ node.type === 'FOLDER' ? '📁' : '📄' }}</span>
-            {{ node.name }}
-         </div>
+            <input 
+                v-if="renamingId === node.id"
+                v-model="renamingValue"
+                v-focus
+                @blur="commitRename(node)"
+                @keydown.enter="($event.target as HTMLInputElement).blur()"
+                @click.stop
+                class="rename-input"
+            />
+            <span v-else class="name-text">{{ node.name }}</span>
+          </div>
          <div class="col-date">{{ formatDate(node.createdAt) }}</div>
          <div class="col-type">{{ node.type === 'FOLDER' ? 'File folder' : 'File' }}</div>
          <div class="col-size">{{ formatSize(node.size || 0) }}</div>
@@ -106,5 +135,18 @@ const handleRowDblClick = (node: any) => {
     padding: 20px;
     text-align: center;
     color: #666;
+}
+
+/* Rename Input Styling */
+.rename-input {
+    background: #202020;
+    color: #fff;
+    border: 1px solid #0078d4;
+    padding: 2px 4px;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    width: 300px;
+    border-radius: 2px;
 }
 </style>

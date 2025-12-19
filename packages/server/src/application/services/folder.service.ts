@@ -37,4 +37,18 @@ export class FolderService {
   async searchNodes(query: string) {
     return await this.repo.searchNodes(query);
   }
+
+  async createNode(data: any) {
+    return await this.repo.createNode(data);
+  }
+
+  async deleteNode(id: string) {
+    // TODO: Recursive delete for folders?
+    // For now, let's assume cascade or simple delete
+    return await this.repo.deleteNode(id);
+  }
+
+  async updateNode(id: string, data: any) {
+    return await this.repo.updateNode(id, data);
+  }
 }

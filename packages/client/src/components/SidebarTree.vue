@@ -14,8 +14,15 @@ const props = defineProps<{
   }
 }>();
 
-const { selectFolder, currentFolder } = useExplorer();
+const { selectFolder, currentFolder, openContextMenu, renamingId, renamingValue, commitRename } = useExplorer();
 const isOpen = ref(false);
+
+const vFocus = {
+  mounted: (el: HTMLElement) => {
+    el.focus();
+    if (el instanceof HTMLInputElement) el.select();
+  }
+};
 
 const isFolder = computed(() => props.node.type === 'FOLDER');
 const subFolders = computed(() => props.node.children?.filter((c: any) => c.type === 'FOLDER') || []);
@@ -38,7 +45,8 @@ const select = () => {
   <div class="tree-node">
     <div class="node-content" 
          :class="{ 'selected': isSelected }"
-         @click="select">
+         @click="select"
+         @contextmenu.prevent.stop="openContextMenu($event, props.node)">
       
       <!-- Arrow -->
       <span class="arrow" 
@@ -50,7 +58,18 @@ const select = () => {
       <!-- Icon -->
       <span class="icon">📁</span>
       
-      <span class="label">{{ node.name }}</span>
+
+      
+      <input 
+        v-if="renamingId === node.id"
+        v-model="renamingValue"
+        v-focus
+        @blur="commitRename(node)"
+        @keydown.enter="($event.target as HTMLInputElement).blur()"
+        @click.stop
+        class="rename-input-sidebar"
+      />
+      <span v-else class="label">{{ node.name }}</span>
     </div>
 
     <!-- Recursive Children -->
@@ -112,5 +131,19 @@ const select = () => {
 .icon {
   font-size: 16px;
   color: #e8c64d; /* Folder yellow */
+}
+
+.rename-input-sidebar {
+    background: #202020;
+    color: #fff;
+    border: 1px solid #0078d4;
+    padding: 0 4px;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    min-width: 50px;
+    max-width: 150px;
+    border-radius: 2px;
+    height: 18px;
 }
 </style>
