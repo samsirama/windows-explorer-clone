@@ -1,5 +1,5 @@
 {
-  "buildCommand": "bun run migrate && bun install",
+  "buildCommand": "bun install && bun run migrate",
   "installCommand": "bun install",
   "rewrites": [
     {
