@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
+    "start": "bun run migrate && bun src/index.ts",
     "migrate": "drizzle-kit push"
   },
   "dependencies": {
