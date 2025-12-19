@@ -1,12 +1,13 @@
 /// <reference types="vite/client" />
 
+/// <reference types="vite/client" />
+
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;
 }
 
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
-}
+// ImportMeta is already defined by vite/client and global types
+// We only need to augment ImportMetaEnv
 
 declare module "*.vue" {
   import type { DefineComponent } from "vue";
